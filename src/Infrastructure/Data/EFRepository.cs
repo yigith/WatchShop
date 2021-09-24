@@ -1,8 +1,10 @@
 ﻿using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
 using Ardalis.Specification;
+using Ardalis.Specification.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Data
@@ -23,9 +25,9 @@ namespace Infrastructure.Data
             return entity;
         }
 
-        public Task CountAsync(ISpecification<T> spec)
+        public async Task<int> CountAsync(ISpecification<T> spec)
         {
-            throw new System.NotImplementedException();
+            return await ApplySpecification(spec).CountAsync();
         }
 
         public async Task DeleteAsync(T entity)
@@ -34,14 +36,14 @@ namespace Infrastructure.Data
             await _context.SaveChangesAsync();
         }
 
-        public Task<T> FirstAsync(ISpecification<T> spec)
+        public async Task<T> FirstAsync(ISpecification<T> spec)
         {
-            throw new System.NotImplementedException();
+            return await ApplySpecification(spec).FirstAsync();
         }
 
-        public Task<T> FirstOrDefaultAsync(ISpecification<T> spec)
+        public async Task<T> FirstOrDefaultAsync(ISpecification<T> spec)
         {
-            throw new System.NotImplementedException();
+            return await ApplySpecification(spec).FirstOrDefaultAsync();
         }
 
         public async Task<T> GetByIdAsync(int id)
@@ -54,15 +56,21 @@ namespace Infrastructure.Data
             return await _context.Set<T>().ToListAsync();
         }
 
-        public Task<List<T>> ListAsync(ISpecification<T> spec)
+        public async Task<List<T>> ListAsync(ISpecification<T> spec)
         {
-            throw new System.NotImplementedException();
+            return await ApplySpecification(spec).ToListAsync();
         }
 
         public async Task UpdateAsync(T entity)
         {
             _context.Update(entity);
             await _context.SaveChangesAsync();
+        }
+
+        private IQueryable<T> ApplySpecification(ISpecification<T> spec)
+        {
+            var evaluator = new SpecificationEvaluator();
+            return evaluator.GetQuery(_context.Set<T>(), spec);
         }
     }
 }
