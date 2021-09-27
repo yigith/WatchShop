@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using ApplicationCore.Constants;
+using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Identity
@@ -7,24 +8,24 @@ namespace Infrastructure.Identity
     {
         public static async Task SeedAsync(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
         {
-            await roleManager.CreateAsync(new IdentityRole("Admin"));
+            await roleManager.CreateAsync(new IdentityRole(AuthorizationConstants.Roles.ADMINISTRATOR));
 
             var demoUser = new ApplicationUser()
             {
-                UserName = "demouser@example.com",
-                Email = "demouser@example.com",
+                UserName = AuthorizationConstants.DEFAULT_DEMO_USER,
+                Email = AuthorizationConstants.DEFAULT_DEMO_USER,
                 EmailConfirmed = true
             };
-            await userManager.CreateAsync(demoUser, "P@ssword1");
+            await userManager.CreateAsync(demoUser, AuthorizationConstants.DEFAULT_PASSWORD);
 
             var adminUser = new ApplicationUser()
             {
-                UserName = "admin@example.com",
-                Email = "admin@example.com",
+                UserName = AuthorizationConstants.DEFAULT_ADMIN_USER,
+                Email = AuthorizationConstants.DEFAULT_ADMIN_USER,
                 EmailConfirmed = true
             };
-            await userManager.CreateAsync(adminUser, "P@ssword1");
-            await userManager.AddToRoleAsync(adminUser, "Admin");
+            await userManager.CreateAsync(adminUser, AuthorizationConstants.DEFAULT_PASSWORD);
+            await userManager.AddToRoleAsync(adminUser, AuthorizationConstants.Roles.ADMINISTRATOR);
         }
     }
 }
