@@ -8,9 +8,20 @@
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
-<ul>
+<div class="row">
     @foreach (var item in Model.Products)
     {
-        <li>@item.Id - @item.ProductName - @item.Price - @item.PictureUri</li>
+        <div class="col-sm-6 col-lg-4">
+            <div class="card mb-3">
+                <img class="card-img-top product-image" src="~/images/products/@item.PictureUri" alt="@item.ProductName" />
+                <div class="card-body">
+                    <h6 class="card-title product-name">@item.ProductName</h6>
+                    <p class="card-text d-flex justify-content-between align-items-center">
+                        <span class="h5 font-weight-lighter">@item.Price.ToString("$0.00")</span>
+                        <a href="#" class="btn btn-success" title="Add to Basket"><i class="fas fa-cart-plus"></i></a>
+                    </p>
+                </div>
+            </div>
+        </div>
     }
-</ul>
+</div>
