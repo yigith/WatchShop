@@ -29,7 +29,7 @@
                     <h6 class="card-title product-name">@item.ProductName</h6>
                     <p class="card-text d-flex justify-content-between align-items-center">
                         <span class="h5 font-weight-lighter">@item.Price.ToString("$0.00")</span>
-                        <a href="#" class="btn btn-success" title="Add to Basket"><i class="fas fa-cart-plus"></i></a>
+                        <a data-add-item-to-basket="@item.Id" href="#" class="btn btn-success" title="Add to Basket"><i class="fas fa-cart-plus"></i></a>
                     </p>
                 </div>
             </div>
@@ -38,3 +38,13 @@
 </div>
 
 <partial name="_PaginationPartial" model="Model.PaginationInfo" />
+
+@section Scripts {
+<script>
+    $("[data-add-item-to-basket]").click(function (event) {
+        event.preventDefault();
+        var id = $(this).data("add-item-to-basket");
+        alert(id);
+    });
+</script>
+}
