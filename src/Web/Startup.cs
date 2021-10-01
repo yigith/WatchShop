@@ -1,4 +1,5 @@
 using ApplicationCore.Interfaces;
+using ApplicationCore.Services;
 using Infrastructure.Data;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;
@@ -34,7 +35,9 @@ namespace Web
             // Ayný türle EFRepository<T> hizmeti enjekte edilecektir.
             services.AddScoped(typeof(IAsyncRepository<>), typeof(EFRepository<>));
 
+            services.AddScoped<IBasketService, BasketService>();
             services.AddScoped<IHomeViewModelService, HomeViewModelService>();
+            services.AddScoped<IBasketViewModelService, BasketViewModelService>();
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 

@@ -3,20 +3,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Web.Interfaces;
 
 namespace Web.Controllers
 {
     public class BasketController : Controller
     {
+        private readonly IBasketViewModelService _basketViewModelService;
+
+        public BasketController(IBasketViewModelService basketViewModelService)
+        {
+            _basketViewModelService = basketViewModelService;
+        }
+
+        [HttpPost]
         public async Task<IActionResult> AddItem(int productId, int quantity = 1)
         {
-            // sepet id getir yoksa oluştur
-
-            // sepete öğeyi ekle
-
-            // sepetteki öğe sayısını getir ve döndür
-
-            return View();
+            return Json(await _basketViewModelService.AddItemToBasket(productId, quantity));
         }
     }
 }

@@ -13,10 +13,12 @@ namespace ApplicationCore.Services
     public class BasketService : IBasketService
     {
         private readonly IAsyncRepository<Basket> _basketRepository;
+        private readonly IAsyncRepository<BasketItem> _basketItemRepository;
 
-        public BasketService(IAsyncRepository<Basket> basketRepository)
+        public BasketService(IAsyncRepository<Basket> basketRepository, IAsyncRepository<BasketItem> basketItemRepository)
         {
             _basketRepository = basketRepository;
+            _basketItemRepository = basketItemRepository;
         }
 
         public async Task AddItemToBasketAsync(int basketId, int productId, int quantity)
@@ -45,6 +47,12 @@ namespace ApplicationCore.Services
             }
 
             await _basketRepository.UpdateAsync(basket);
+        }
+
+        public async Task<int> BasketItemsCountAsync(int basketId)
+        {
+            var spec = new BasketItemsSpecification(basketId);
+            return await _basketItemRepository.CountAsync(spec);
         }
     }
 }
