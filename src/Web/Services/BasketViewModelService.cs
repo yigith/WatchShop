@@ -25,7 +25,7 @@ namespace Web.Services
             _basketService = basketService;
         }
 
-        public async Task<BasketItemAddedViewModel> AddItemToBasket(int productId, int quantity)
+        public async Task<BasketItemAddedViewModel> AddItemToBasketAsync(int productId, int quantity)
         {
             // Get or create basket id
             var basketId = await GetOrCreateBasketIdAsync();
@@ -38,6 +38,32 @@ namespace Web.Services
             {
                 ItemsCount = await _basketService.BasketItemsCountAsync(basketId)
             };
+        }
+
+        public async Task<NavbarBasketViewModel> GetNavbarBasketViewModelAsync()
+        {
+            return new NavbarBasketViewModel()
+            {
+                ItemsCount = await BasketItemsCountAsync()
+            };
+        }
+
+        // This method doesn't create a basket if non exists.
+        private async Task<int> BasketItemsCountAsync()
+        {
+            string userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var anonymousUserId = _httpContextAccessor.HttpContext.Request.Cookies[Constants.BASKET_COOKIENAME];
+            var buyerId = userId ?? anonymousUserId;
+            if (buyerId != null)
+            {
+                var spec = new BasketSpecification(buyerId);
+                var basket = await _basketRepository.FirstOrDefaultAsync(spec);
+
+                if (basket != null)
+                    return await _basketService.BasketItemsCountAsync(basket.Id);
+            }  
+
+            return 0;
         }
 
         public async Task<int> GetOrCreateBasketIdAsync()

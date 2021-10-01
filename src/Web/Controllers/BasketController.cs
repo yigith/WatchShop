@@ -19,7 +19,7 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddItem(int productId, int quantity = 1)
         {
-            return Json(await _basketViewModelService.AddItemToBasket(productId, quantity));
+            return Json(await _basketViewModelService.AddItemToBasketAsync(productId, quantity));
         }
     }
 }
