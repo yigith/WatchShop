@@ -87,3 +87,9 @@ body {
 .product-image:hover {
     padding: .2rem;
 }
+
+/* BASKET START */
+.number-input > .quantity {
+    width: 70px;
+}
+/* BASKET END   */

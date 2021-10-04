@@ -10,7 +10,9 @@
 
         public int Quantity { get; set; }
 
-        public decimal Price { get; set; }
+        public decimal UnitPrice { get; set; }
+
+        public decimal TotalPrice => Quantity * UnitPrice;
 
         public string PictureUri { get; set; }
     }
