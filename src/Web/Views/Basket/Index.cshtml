@@ -3,6 +3,7 @@
     ViewBag.Title = "Basket";
 }
 
+<form asp-controller="Basket" asp-action="Update" method="post">
 <!--Section: Block Content-->
 <section>
 
@@ -16,18 +17,21 @@
             <div class="mb-3">
                 <div class="pt-4 wish-list">
 
-                    <h5 class="mb-4">Cart (<span>@Model.Items.Count</span> items)</h5>
+                    <div class="d-flex justify-content-between align-items-baseline">
+                        <h5 class="mb-4">Cart (<span>@Model.Items.Count</span> items)</h5>
+                        <button class="btn btn-sm btn-success">Update Cart</button>
+                    </div>
 
                     @foreach (var item in Model.Items)
                     {
                         <div class="row mb-4">
-                            <div class="col-md-5 col-lg-3 col-xl-3">
+                            <div class="col-md-3 col-lg-2 col-xl-2">
                                 <div class="view zoom overlay z-depth-1 rounded mb-3 mb-md-0">
                                     <img class="img-fluid w-100"
                                          src="~/images/products/@item.PictureUri" alt="Sample">
                                 </div>
                             </div>
-                            <div class="col-md-7 col-lg-9 col-xl-9">
+                            <div class="col-md-9 col-lg-10 col-xl-10">
                                 <div>
                                     <div class="d-flex justify-content-between">
                                         <div>
@@ -36,7 +40,7 @@
                                         </div>
                                         <div>
                                             <div class="def-number-input number-input safari_only mb-0">
-                                                <input class="quantity" min="0" name="quantity" value="@item.Quantity" type="number">
+                                                <input class="quantity" min="1" name="quantities[@item.Id]" value="@item.Quantity" type="number">
                                             </div>
                                         </div>
                                     </div>
@@ -104,3 +108,4 @@
 
 </section>
 <!--Section: Block Content-->
+</form>
