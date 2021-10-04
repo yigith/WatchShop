@@ -1,0 +1,18 @@
+﻿@model BasketViewModel
+@{ 
+    ViewBag.Title = "Basket";
+} 
+
+<h1>Basket</h1>
+
+@foreach (var item in Model.Items)
+{
+    <p>
+        <img src="~/images/products/@item.PictureUri" width="50" />
+        @item.ProductName 
+        @item.Price.ToString("$0.00")
+        x@(item.Quantity)
+    </p>
+}
+
+<p>Total Price: @Model.TotalPrice.ToString("$0.00")</p>
