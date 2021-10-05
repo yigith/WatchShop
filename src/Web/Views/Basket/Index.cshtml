@@ -1,9 +1,15 @@
 ﻿@model BasketViewModel
 @{
     ViewBag.Title = "Basket";
+    string message = null;
+    if ((string)TempData["result"] == "UpdateSuccess")
+        message = "The basket has been updated successfully.";
+    else if ((string)TempData["result"] == "RemoveSuccess")
+        message = "The item has been removed successfully.";
 }
 
 <form asp-controller="Basket" asp-action="Update" method="post">
+
 <!--Section: Block Content-->
 <section>
 
@@ -19,8 +25,26 @@
 
                     <div class="d-flex justify-content-between align-items-baseline">
                         <h5 class="mb-4">Cart (<span>@Model.Items.Count</span> items)</h5>
-                        <button class="btn btn-sm btn-success">Update Cart</button>
+
+                        <div>
+                            <a href="#" class="btn btn-sm btn-danger" onclick="emptyCart()">Empty Cart</a>
+                            <button class="btn btn-sm btn-success ml-2">Update Cart</button>
+                        </div>
                     </div>
+
+                    @if (Model.Items.Count == 0)
+                    {
+                        <div class="card">
+                            <div class="card-body text-center py-5">
+                                <div class="text-secondary empty-basket-icon">
+                                    <i class="fas fa-shopping-basket"></i>
+                                </div>
+                                <p class="mt-1">
+                                    Your cart is empty.
+                                </p>
+                            </div>
+                        </div>
+                    }
 
                     @foreach (var item in Model.Items)
                     {
@@ -46,7 +70,7 @@
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
-                                            <a href="#!" type="button" class="card-link-secondary small text-uppercase mr-3">
+                                            <a href="#!" type="button" class="card-link-secondary small text-uppercase mr-3" onclick="removeItem(@item.Id)">
                                                 <i class="fas fa-trash-alt mr-1"></i> Remove item
                                             </a>
                                             <a href="#!" type="button" class="card-link-secondary small text-uppercase">
@@ -109,3 +133,27 @@
 </section>
 <!--Section: Block Content-->
 </form>
+
+<form id="frmRemoveItem" asp-controller="Basket" asp-action="RemoveItem" method="post">
+    <input type="hidden" id="basketItemId" name="basketItemId" value="" />
+</form>
+
+<form id="frmDelete" asp-controller="Basket" asp-action="Delete" method="post"></form>
+
+@section Scripts {
+    <script>
+        function removeItem(itemId) {
+            $("#basketItemId").val(itemId);
+            $("#frmRemoveItem").submit();
+        }
+
+        function emptyCart() {
+            $("#frmDelete").submit();
+        }
+
+        var message = "@message";
+
+        if (message)
+            toastr.success(message, "Success", { positionClass: "toast-bottom-right" });
+    </script>
+}

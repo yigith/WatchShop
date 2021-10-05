@@ -5,7 +5,6 @@ using ApplicationCore.Specifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ApplicationCore.Services
@@ -23,13 +22,11 @@ namespace ApplicationCore.Services
 
         public async Task AddItemToBasketAsync(int basketId, int productId, int quantity)
         {
-            var spec = new BasketWithItemsSpecification(basketId);
-            Basket basket = await _basketRepository.FirstOrDefaultAsync(spec);
+            if (quantity < 1)
+                throw new ArgumentOutOfRangeException("Quantity must be a positive number.");
 
-            if (basket == null)
-                throw new BasketNotFoundException(basketId);
-
-            BasketItem item = basket.Items.FirstOrDefault(x => x.ProductId == productId);
+            var basket = await GetBasketWithItemsAsync(basketId);
+            var item = basket.Items.FirstOrDefault(x => x.ProductId == productId);
 
             if (item != null)
             {
@@ -55,9 +52,42 @@ namespace ApplicationCore.Services
             return await _basketItemRepository.CountAsync(spec);
         }
 
-        public Task SetQuantities(int basketId, Dictionary<int, int> quantities)
+        public async Task DeleteBasketAsync(int basketId)
         {
-            // TODO: get basket and update items
+            var basket = await GetBasketWithItemsAsync(basketId);
+            await _basketRepository.DeleteAsync(basket);
+        }
+
+        public async Task RemoveBasketItemAsync(int basketId, int basketItemId)
+        {
+            var basket = await GetBasketWithItemsAsync(basketId);
+            basket.Items.RemoveAll(x => x.Id == basketItemId);
+            await _basketRepository.UpdateAsync(basket);
+        }
+
+        public async Task SetQuantitiesAsync(int basketId, Dictionary<int, int> quantities)
+        {
+            var basket = await GetBasketWithItemsAsync(basketId);
+
+            foreach (var item in basket.Items)
+            {
+                int newValue;
+                if (quantities.TryGetValue(item.Id, out newValue))
+                {
+                    if (newValue < 1)
+                        throw new ArgumentOutOfRangeException("Quantity must be a positive number.");
+                    item.Quantity = newValue;
+                }
+            }
+            await _basketRepository.UpdateAsync(basket);
+        }
+
+        private async Task<Basket> GetBasketWithItemsAsync(int basketId)
+        {
+            var spec = new BasketWithItemsSpecification(basketId);
+            Basket basket = await _basketRepository.FirstOrDefaultAsync(spec);
+            if (basket == null) throw new BasketNotFoundException(basketId);
+            return basket;
         }
     }
 }
