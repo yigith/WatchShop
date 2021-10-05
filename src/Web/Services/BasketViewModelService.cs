@@ -78,7 +78,7 @@ namespace Web.Services
                 // Find the basket and return its id.
                 var spec = new BasketSpecification(anonymousUserId);
                 Basket basket = await _basketRepository.FirstOrDefaultAsync(spec);
-                return basket.Id;
+                if (basket != null) return basket.Id;
             }
 
             // If not, create a new basket with the anonymous user id and return its id.
