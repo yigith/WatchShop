@@ -14,5 +14,7 @@ namespace Web.Interfaces
         Task<int> GetOrCreateBasketIdAsync();
 
         Task<NavbarBasketViewModel> GetNavbarBasketViewModelAsync();
+
+        Task TransferBasketAsync(string userId);
     }
 }

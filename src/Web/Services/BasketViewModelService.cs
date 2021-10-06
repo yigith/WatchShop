@@ -134,5 +134,14 @@ namespace Web.Services
 
             return null;
         }
+
+        public async Task TransferBasketAsync(string userId)
+        {
+            var anonymousUserId = _httpContextAccessor.HttpContext.Request.Cookies[Constants.BASKET_COOKIENAME];
+
+            if (anonymousUserId == null || userId == null) return;
+            await _basketService.TransferBasketAsync(anonymousUserId, userId);
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete(Constants.BASKET_COOKIENAME);
+        }
     }
 }
