@@ -96,3 +96,11 @@ body {
     font-size: 48px;
 }
 /* BASKET END   */
+
+.validation-summary-valid {
+    display: none;
+}
+
+.validation-summary-errors > ul {
+    margin-bottom: 0;
+}
