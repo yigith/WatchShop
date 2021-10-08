@@ -27,9 +27,9 @@ namespace Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppIdentityDbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("AppIdentityDbContext")));
+                options.UseSqlServer(Configuration.GetConnectionString("AppIdentityDbContext")));
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("ApplicationDbContext")));
+                options.UseSqlServer(Configuration.GetConnectionString("ApplicationDbContext")));
 
             // Belirli bir türle (T) IAsyncRepository generic olarak talep edildiðinde
             // Ayný türle EFRepository<T> hizmeti enjekte edilecektir.
