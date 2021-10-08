@@ -16,6 +16,9 @@ Install-Package Microsoft.AspNetCore.Identity.EntityFrameworkCore
 ### ApplicationCore
 Install-Package Ardalis.Specification
 
+### UnitTests
+Install-Package Moq
+
 ## EF Commands
 **Default project: src\Infrastructure**
 
